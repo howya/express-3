@@ -2,11 +2,12 @@
 
 class accountController {
   constructor(dataAdapter) {
-    this.adapter = dataAdapter
+    this.dataAdapter = dataAdapter
   }
 
   async find(id, req, res) {
-    return await this.adapter.find(id)
+    let response = await this.dataAdapter.getData(id)
+    return res.status(200).json({data: response})
   }
 }
 

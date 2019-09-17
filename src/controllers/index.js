@@ -1,7 +1,7 @@
 'use strict'
 
-import accountController from './account'
+import AccountController from './account'
 
 export default {
-  accountController
+  AccountController
 }

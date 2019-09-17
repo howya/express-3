@@ -5,19 +5,38 @@ const baseURL = process.env.BASEURL
 
 class DataAdapter {
 
-  constructor() {
-    console.log('construct')
+  async getDataById(id) {
+    return await this.axiosWrapper('posts/' + id,'GET', [], null)
   }
 
-  async getData(id) {
-    return this.axiosWrapper('todos/' + id,'GET', [], null)
+  async getIndex(group) {
+    let index =  await this.axiosWrapper('posts','GET', [], null)
+
+    index = group ? index.filter((el) => el.userId === 1).reduce(this.group(group), {}) : index
+
+    return index
   }
 
-  async axiosWrapper(resource, verb, headers, data) {
-    axios({
+  group (property) {
+    return (accum, current) => {
+      if (current.hasOwnProperty(property)) {
+        if (accum.hasOwnProperty(current[property])) {
+          accum[current[property]].push(current)
+        } else {
+          accum[current[property]] = [current]
+        }
+      }
+      return accum
+    }
+  }
+
+  axiosWrapper(resource, verb, headers, data) {
+    return axios({
       method:verb,
       url: baseURL + resource,
       data: data
+    }).then(response => {
+      return response.data
     }).catch(reason => {
       if (error.response) {
         throw new Error('')
